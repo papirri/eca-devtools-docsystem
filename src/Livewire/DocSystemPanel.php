@@ -65,7 +65,7 @@ class DocSystemPanel extends Component
         }
 
         $service = new DocPageService();
-        $page = $service->findOrCreateByPath(request()->path());
+        $page = $service->findOrCreateByPath(request()->path(), request()->getQueryString() ?? '');
         $this->docPageId = $page->id;
     }
 

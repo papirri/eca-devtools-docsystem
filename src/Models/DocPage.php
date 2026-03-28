@@ -11,6 +11,7 @@ class DocPage extends Model
 {
     protected $fillable = [
         'url_path',
+        'query_string',
         'title',
     ];
 

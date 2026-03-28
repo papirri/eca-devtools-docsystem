@@ -87,4 +87,17 @@ return [
         'file_updated',
         'file_deleted',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ignored Query Parameters
+    |--------------------------------------------------------------------------
+    | These query string parameters are stripped before the URL key is computed.
+    | Add tokens, pagination cursors, or any param that should NOT create a
+    | separate DocPage record.
+    */
+    'ignored_query_params' => [
+        '_token',
+        '_debugbar',
+    ],
 ];

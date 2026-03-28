@@ -57,7 +57,7 @@
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-widest text-indigo-200">DocSystem</p>
                     <h2 class="text-white font-bold text-sm truncate max-w-xs">
-                        /{{ $this->page?->url_path ?? request()->path() }}
+                        /{{ $this->page?->url_path ?? request()->path() }}@if($this->page?->query_string)?{{ $this->page->query_string }}@endif
                     </h2>
                 </div>
                 <button wire:click="togglePanel"
