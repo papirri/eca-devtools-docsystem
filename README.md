@@ -53,6 +53,24 @@ php artisan vendor:publish --tag=docsystem-config
 
 > The floating button is **injected automatically** into every HTML response for authenticated users in non-production environments — no layout changes needed.
 
+### 4. Add Tailwind source (required for compiled CSS setups)
+
+If your project uses Tailwind with a compiled build (Vite / webpack), the panel's utility classes won't be generated unless you tell Tailwind to scan the package views. Add this line to your CSS entry file (e.g. `resources/css/app.css`):
+
+```css
+@source '../../vendor/eca-devtools/docsystem/resources/views/**/*.blade.php';
+```
+
+Then rebuild your assets:
+
+```bash
+npm run build
+# or, during development:
+npm run dev
+```
+
+> If you skip this step the button will be injected into the HTML but will appear invisible due to missing styles.
+
 ---
 
 ## Usage
