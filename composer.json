@@ -1,0 +1,33 @@
+{
+    "name": "devtools/docsystem",
+    "description": "In-app documentation and tracking system per URL/page for development environments.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "DevTools",
+            "email": "dev@devtools.local"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/database": "^11.0|^12.0",
+        "illuminate/filesystem": "^11.0|^12.0",
+        "livewire/livewire": "^3.0|^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Devtools\\DocSystem\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Devtools\\DocSystem\\DocSystemServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
