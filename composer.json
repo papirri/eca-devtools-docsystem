@@ -1,12 +1,12 @@
 {
-    "name": "devtools/docsystem",
+    "name": "eca-devtools/docsystem",
     "description": "In-app documentation and tracking system per URL/page for development environments.",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "DevTools",
-            "email": "dev@devtools.local"
+            "name": "ECADevTools",
+            "email": "dev@ecadevtools.local"
         }
     ],
     "require": {

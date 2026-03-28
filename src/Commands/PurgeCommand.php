@@ -73,7 +73,7 @@ class PurgeCommand extends Command
 
         $this->newLine();
         $this->info('DocSystem purge complete.');
-        $this->line('You can now safely run: composer remove devtools/docsystem');
+        $this->line('You can now safely run: composer remove eca-devtools/docsystem');
 
         return self::SUCCESS;
     }

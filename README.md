@@ -35,7 +35,7 @@
 ### 1. Require the package
 
 ```bash
-composer require devtools/docsystem
+composer require eca-devtools/docsystem
 ```
 
 ### 2. Publish and run migrations
@@ -168,7 +168,7 @@ No routes, no Livewire components, no commands will be registered in production.
 php artisan docsystem:purge
 
 # 2. Remove the package
-composer remove devtools/docsystem
+composer remove eca-devtools/docsystem
 
 # 3. Remove the component tag from your layout
 # (delete the <livewire:docsystem-panel /> line)
