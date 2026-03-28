@@ -51,17 +51,7 @@ php artisan migrate
 php artisan vendor:publish --tag=docsystem-config
 ```
 
-### 4. Add the component to your layout
-
-Inside your main Blade layout, before `</body>`:
-
-```blade
-@auth
-    <livewire:docsystem-panel />
-@endauth
-```
-
-> The component already checks `Auth::check()` and `app()->environment('production')` internally, so it's double-guarded.
+> The floating button is **injected automatically** into every HTML response for authenticated users in non-production environments — no layout changes needed.
 
 ---
 

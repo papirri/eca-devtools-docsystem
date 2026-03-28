@@ -30,6 +30,7 @@ class DocSystemServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerCommands();
         $this->registerLivewireComponents();
+        $this->registerMiddleware();
     }
 
     protected function registerPublishables(): void
@@ -67,5 +68,13 @@ class DocSystemServiceProvider extends ServiceProvider
     protected function registerLivewireComponents(): void
     {
         Livewire::component('docsystem-panel', DocSystemPanel::class);
+    }
+
+    protected function registerMiddleware(): void
+    {
+        $this->app['router']->pushMiddlewareToGroup(
+            'web',
+            \Devtools\DocSystem\Middleware\InjectDocSystemPanel::class
+        );
     }
 }
