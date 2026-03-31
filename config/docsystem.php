@@ -14,6 +14,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Admin Route
+    |--------------------------------------------------------------------------
+    | The URL path where the full admin management panel is available.
+    | Only accessible in non-production environments by authenticated users.
+    | Example: visit /docsystem/admin
+    */
+    'admin_route' => env('DOCSYSTEM_ADMIN_ROUTE', 'docsystem/admin'),
+
+    /*
+    |--------------------------------------------------------------------------
     | File Storage
     |--------------------------------------------------------------------------
     | Directory inside storage/app/public where doc files are stored.

@@ -7,6 +7,7 @@ namespace Devtools\DocSystem;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use Devtools\DocSystem\Livewire\DocSystemPanel;
+use Devtools\DocSystem\Livewire\DocSystemAdmin;
 use Devtools\DocSystem\Commands\PurgeCommand;
 
 class DocSystemServiceProvider extends ServiceProvider
@@ -31,6 +32,7 @@ class DocSystemServiceProvider extends ServiceProvider
         $this->registerCommands();
         $this->registerLivewireComponents();
         $this->registerMiddleware();
+        $this->registerRoutes();
     }
 
     protected function registerPublishables(): void
@@ -68,6 +70,12 @@ class DocSystemServiceProvider extends ServiceProvider
     protected function registerLivewireComponents(): void
     {
         Livewire::component('docsystem-panel', DocSystemPanel::class);
+        Livewire::component('docsystem-admin', DocSystemAdmin::class);
+    }
+
+    protected function registerRoutes(): void
+    {
+        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
     }
 
     protected function registerMiddleware(): void
