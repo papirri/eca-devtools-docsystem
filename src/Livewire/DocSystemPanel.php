@@ -74,6 +74,63 @@ class DocSystemPanel extends Component
         $this->docPageId = $page->id;
     }
 
+    /**
+     * Called from Alpine after every wire:navigate navigation.
+     * The browser passes the new path and search string directly so we don't
+     * rely on request() (which still reflects the previous Livewire request).
+     *
+     * @param string $pathname  e.g. "/cp/documentos/2"
+     * @param string $search    e.g. "?tab=scans"  (may be empty)
+     */
+    public function onNavigated(string $pathname, string $search = ''): void
+    {
+        if (app()->environment('production') || ! Auth::check()) {
+            return;
+        }
+
+        // Strip leading slash so it matches request()->path() conventions
+        $path = ltrim($pathname, '/');
+        $query = ltrim($search, '?');
+
+        // Try to match a named route so we get the pattern (e.g. cp/documentos/{id})
+        $urlPath = $path;
+        try {
+            $routes = app('router')->getRoutes();
+            $matched = $routes->match(
+                \Illuminate\Http\Request::create('/' . $path)
+            );
+            if ($matched) {
+                $urlPath = $matched->uri();
+            }
+        } catch (\Throwable) {
+            // No match — keep the literal path
+        }
+
+        $service = new DocPageService();
+        $page = $service->findOrCreateByPath($urlPath, $query);
+        $this->docPageId = $page->id;
+
+        // Reset all form state so stale data from the previous page is cleared
+        $this->unsetComputedPropertyCache();
+        $this->resetFormState();
+    }
+
+    private function resetFormState(): void
+    {
+        $this->versionTitle       = '';
+        $this->versionNumber      = '';
+        $this->versionDescription = '';
+        $this->editingVersionId   = null;
+        $this->showVersionForm    = false;
+        $this->noteType           = 'nota';
+        $this->noteContent        = '';
+        $this->editingNoteId      = null;
+        $this->fileName           = '';
+        $this->uploadTargetFileId = null;
+        $this->uploadedFile       = null;
+        $this->resetDiff();
+    }
+
     // ── Computed ─────────────────────────────────────────────────────────────
 
     #[Computed]

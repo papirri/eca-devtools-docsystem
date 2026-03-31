@@ -6,7 +6,9 @@
     }
 @endphp
 
-<div x-data="{ open: @entangle('open') }">
+<div
+    x-data="{ open: @entangle('open') }"
+    x-on:livewire:navigated.window="$wire.onNavigated(window.location.pathname, window.location.search)">
 
     {{-- ── Floating trigger button ────────────────────────────────────────── --}}
     <button
