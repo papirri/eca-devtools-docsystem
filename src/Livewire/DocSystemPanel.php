@@ -39,6 +39,7 @@ class DocSystemPanel extends Component
     // ── Notes form ────────────────────────────────────────────────────────────
     public string $noteType = 'nota';
     public string $noteContent = '';
+    public ?int $editingNoteId = null;
 
     // ── Files form ────────────────────────────────────────────────────────────
     public string $fileName = '';
@@ -181,6 +182,21 @@ class DocSystemPanel extends Component
 
     // ── Notes actions ────────────────────────────────────────────────────────
 
+    public function openNoteEdit(int $noteId): void
+    {
+        $note = DocNote::findOrFail($noteId);
+        $this->editingNoteId = $noteId;
+        $this->noteType      = $note->type;
+        $this->noteContent   = $note->content;
+    }
+
+    public function cancelNoteEdit(): void
+    {
+        $this->editingNoteId = null;
+        $this->noteType      = 'nota';
+        $this->noteContent   = '';
+    }
+
     public function saveNote(): void
     {
         $this->validate([
@@ -188,28 +204,35 @@ class DocSystemPanel extends Component
             'noteContent' => 'required|string|max:5000',
         ]);
 
-        $user = Auth::user();
-        $page = $this->page;
+        $user     = Auth::user();
+        $page     = $this->page;
         $timeline = new TimelineService();
 
-        $note = DocNote::create([
-            'doc_page_id' => $page->id,
-            'type'        => $this->noteType,
-            'content'     => $this->noteContent,
-            'created_by'  => $user?->name ?? $user?->email,
-        ]);
-
-        $timeline->record($page->id, 'note_added', ['note_id' => $note->id, 'type' => $note->type]);
+        if ($this->editingNoteId) {
+            $note = DocNote::findOrFail($this->editingNoteId);
+            $note->update([
+                'type'    => $this->noteType,
+                'content' => $this->noteContent,
+            ]);
+            $this->editingNoteId = null;
+        } else {
+            $note = DocNote::create([
+                'doc_page_id' => $page->id,
+                'type'        => $this->noteType,
+                'content'     => $this->noteContent,
+                'created_by'  => $user?->name ?? $user?->email,
+            ]);
+            $timeline->record($page->id, 'note_added', ['note_id' => $note->id, 'type' => $note->type]);
+        }
 
         $this->noteContent = '';
-        $this->noteType = 'nota';
+        $this->noteType    = 'nota';
         unset($this->page);
     }
 
     public function deleteNote(int $noteId): void
     {
-        $note = DocNote::findOrFail($noteId);
-        $note->delete();
+        DocNote::findOrFail($noteId)->delete();
         unset($this->page);
     }
 

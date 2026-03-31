@@ -203,9 +203,11 @@
                 {{-- ════════ NOTES TAB ════════ --}}
                 @if($activeTab === 'notes')
                     <div class="space-y-4">
-                        {{-- Add note form --}}
+                        {{-- Add / Edit note form --}}
                         <div class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 space-y-3">
-                            <h3 class="font-semibold text-gray-700 dark:text-gray-300 text-xs uppercase tracking-wider">Add a note</h3>
+                            <h3 class="font-semibold text-gray-700 dark:text-gray-300 text-xs uppercase tracking-wider">
+                                {{ $editingNoteId ? 'Edit note' : 'Add a note' }}
+                            </h3>
                             <div>
                                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Type</label>
                                 <select wire:model="noteType"
@@ -224,10 +226,18 @@
                                 </textarea>
                                 @error('noteContent') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
-                            <button wire:click="saveNote"
-                                    class="text-xs bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
-                                Add note
-                            </button>
+                            <div class="flex gap-2">
+                                <button wire:click="saveNote"
+                                        class="text-xs bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+                                    {{ $editingNoteId ? 'Update note' : 'Add note' }}
+                                </button>
+                                @if($editingNoteId)
+                                <button wire:click="cancelNoteEdit"
+                                        class="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors">
+                                    Cancel
+                                </button>
+                                @endif
+                            </div>
                         </div>
 
                         {{-- Notes list --}}
@@ -245,9 +255,13 @@
                                 <span class="text-xs font-semibold px-2 py-0.5 rounded-full {{ $noteBadge[$note->type] ?? 'bg-gray-100 text-gray-700' }}">
                                     {{ config('docsystem.note_types.' . $note->type, $note->type) }}
                                 </span>
-                                <button wire:click="deleteNote({{ $note->id }})"
-                                        wire:confirm="Delete this note?"
-                                        class="text-xs text-red-400 hover:text-red-600 transition-colors">Delete</button>
+                                <div class="flex items-center gap-3">
+                                    <button wire:click="openNoteEdit({{ $note->id }})"
+                                            class="text-xs text-indigo-400 hover:text-indigo-600 transition-colors">Edit</button>
+                                    <button wire:click="deleteNote({{ $note->id }})"
+                                            wire:confirm="Delete this note?"
+                                            class="text-xs text-red-400 hover:text-red-600 transition-colors">Delete</button>
+                                </div>
                             </div>
                             <p class="mt-2 text-xs text-gray-700 dark:text-gray-300 whitespace-pre-line leading-relaxed">{{ $note->content }}</p>
                             <p class="mt-1 text-xs text-gray-400">{{ $note->created_by ?? '—' }} · {{ $note->created_at->diffForHumans() }}</p>
