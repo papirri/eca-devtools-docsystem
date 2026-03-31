@@ -65,7 +65,11 @@ class DocSystemPanel extends Component
         }
 
         $service = new DocPageService();
-        $page = $service->findOrCreateByPath(request()->path(), request()->getQueryString() ?? '');
+        // Use the route URI pattern (e.g. "cp/documentos/{id}") so that all
+        // records for the same resource share one DocPage. Fall back to the
+        // literal path when no named route is matched (e.g. custom 404 pages).
+        $urlPath = request()->route()?->uri() ?? request()->path();
+        $page = $service->findOrCreateByPath($urlPath, request()->getQueryString() ?? '');
         $this->docPageId = $page->id;
     }
 
