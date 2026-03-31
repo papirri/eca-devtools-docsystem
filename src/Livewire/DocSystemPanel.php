@@ -111,7 +111,7 @@ class DocSystemPanel extends Component
         $this->docPageId = $page->id;
 
         // Reset all form state so stale data from the previous page is cleared
-        $this->unsetComputedPropertyCache();
+        unset($this->page); // bust Livewire 4 computed property cache
         $this->resetFormState();
     }
 
