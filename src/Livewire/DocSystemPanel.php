@@ -53,6 +53,11 @@ class DocSystemPanel extends Component
     public ?int $diffFileId = null;
     public bool $showDiff = false;
 
+    // ── Navigation dedup ─────────────────────────────────────────────────────
+    // Prevents double-firing when both livewire:navigated and our pushState
+    // hook notify onNavigated for the same URL.
+    private string $lastNavigatedKey = '';
+
     // ─────────────────────────────────────────────────────────────────────────
 
     public function mount(): void
@@ -87,6 +92,13 @@ class DocSystemPanel extends Component
         if (app()->environment('production') || ! Auth::check()) {
             return;
         }
+
+        // Deduplicate: ignore repeated calls for the exact same URL
+        $key = $pathname . '|' . ltrim($search, '?');
+        if ($key === $this->lastNavigatedKey) {
+            return;
+        }
+        $this->lastNavigatedKey = $key;
 
         // Strip leading slash so it matches request()->path() conventions
         $path = ltrim($pathname, '/');

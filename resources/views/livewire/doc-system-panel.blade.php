@@ -8,6 +8,24 @@
 
 <div
     x-data="{ open: @entangle('open') }"
+    x-init="
+        if (!window.__docSystemNavHooked) {
+            window.__docSystemNavHooked = true;
+            const notify = (url) => {
+                const u = new URL(url || window.location.href, window.location.origin);
+                window.dispatchEvent(new CustomEvent('docsystem:urlchanged', { detail: { pathname: u.pathname, search: u.search } }));
+            };
+            ['pushState', 'replaceState'].forEach(function(method) {
+                const orig = history[method].bind(history);
+                history[method] = function(state, title, url) {
+                    orig(state, title, url);
+                    if (url) notify(url);
+                };
+            });
+            window.addEventListener('popstate', function() { notify(window.location.href); });
+        }
+    "
+    x-on:docsystem:urlchanged.window="$wire.onNavigated($event.detail.pathname, $event.detail.search)"
     x-on:livewire:navigated.window="$wire.onNavigated(window.location.pathname, window.location.search)">
 
     {{-- ── Floating trigger button ────────────────────────────────────────── --}}
